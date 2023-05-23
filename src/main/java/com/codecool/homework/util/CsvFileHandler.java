@@ -2,9 +2,9 @@ package com.codecool.homework.util;
 
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-import java.io.FileNotFoundException;
+import java.io.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 
@@ -26,5 +26,12 @@ public class CsvFileHandler {
         }
         scanner.close();
         return data;
+    }
+
+    public void writeCsvData(Collection<String> data, String filename) throws IOException {
+        File csvOutputFile = new File(filename);
+        try (PrintWriter printWriter = new PrintWriter(csvOutputFile)) {
+            data.forEach(printWriter::println);
+        }
     }
 }
