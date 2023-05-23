@@ -268,6 +268,10 @@ public class DataProcessor implements CommandLineRunner {
             return emptyPayment;
         }
         // TODO checking if the date is a real date
+        if (customer == null) {
+            logger.warning("Customer not found for payment: " + rawPaymentString);
+            return emptyPayment;
+        }
 
         // if all validation passes, creates Payment object
         Payment payment = new Payment(webshopId, customerId, type, amountPayed, bankAccountNumber, creditOrDebitCardNumber,
