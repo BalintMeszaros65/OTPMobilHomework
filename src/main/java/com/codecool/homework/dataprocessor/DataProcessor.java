@@ -131,6 +131,8 @@ public class DataProcessor implements CommandLineRunner {
             logger.severe("Address is empty in customer: " + String.join(";", rawCustomer));
             return emptyCustomer;
         }
+
+        // if all validation passes, creates Customer object
         Customer customer = new Customer(webshopId, id, name, address);
         return Optional.of(customer);
     }
@@ -249,7 +251,7 @@ public class DataProcessor implements CommandLineRunner {
         }
         // TODO checking if the date is a real date
 
-        // if all validation passes, create Payment object
+        // if all validation passes, creates Payment object
         Payment payment = new Payment(webshopId, customerId, type, amountPayed, bankAccountNumber, creditOrDebitCardNumber,
                 dateOfPayment, customer);
         return Optional.of(payment);
