@@ -236,11 +236,11 @@ public class DataProcessor implements CommandLineRunner {
             return emptyPayment;
         }
         if (type.equals("card") && !bankAccountNumber.isEmpty()) {
-            logger.severe("Card payment and bank account number found in payment: " + rawPaymentString);
+            logger.severe("Card payment with bank account number found in payment: " + rawPaymentString);
             return emptyPayment;
         }
         if (type.equals("transfer") && !creditOrDebitCardNumber.isEmpty()) {
-            logger.severe("Transfer payment and credit/debit card number found in payment: " + rawPaymentString);
+            logger.severe("Transfer payment with credit/debit card number found in payment: " + rawPaymentString);
             return emptyPayment;
         }
         if (!bankAccountNumber.isEmpty() && !creditOrDebitCardNumber.isEmpty()) {
