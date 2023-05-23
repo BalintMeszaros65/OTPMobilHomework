@@ -43,6 +43,10 @@ public class DataProcessor implements CommandLineRunner {
         Set<Customer> customers = validateCustomers(logger, rawDataOfCustomers);
         // validating payments data
         List<Payment> payments = validatePayments(logger, rawDataOfPayments, customers);
+        // creating report for customer payment sum
+        Set<String> reportForCustomerPaymentSum = createReportForSumPaymentOfCustomers(customers, payments);
+        // writing report to report01.csv file
+        csvFileHandler.writeCsvData(reportForCustomerPaymentSum, "report01.csv");
     }
 
     // **************************************************
