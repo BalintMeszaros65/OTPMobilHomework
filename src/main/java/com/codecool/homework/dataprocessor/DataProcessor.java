@@ -36,6 +36,7 @@ public class DataProcessor implements CommandLineRunner {
         File customerFile = new File("src/main/resources/input/customer.csv");
         File paymentsFile = new File("src/main/resources/input/payments.csv");
         // reading data from customer.csv and payments.csv and storing the 2d matrices
+        // not catching FileNotFoundException because if the files are not found the program is redundant
         List<List<String>> rawDataOfCustomers = csvFileHandler.readCsvData(customerFile);
         List<List<String>> rawDataOfPayments = csvFileHandler.readCsvData(paymentsFile);
         // validating customer data
@@ -49,6 +50,9 @@ public class DataProcessor implements CommandLineRunner {
     // **************************************************
     /**
      * Validates each customer from row data.
+     *
+     * @param logger Logger for corrupt data handling
+     * @param rawDataOfCustomers raw data of customers to consume
      *
      * @return set of Customers.
      *
@@ -67,6 +71,8 @@ public class DataProcessor implements CommandLineRunner {
 
     /**
      * Collects duplicate customer ids.
+     *
+     * @param rawDataOfCustomers raw data of customers to consume
      *
      * @return set of Strings.
      *
@@ -92,6 +98,10 @@ public class DataProcessor implements CommandLineRunner {
     /**
      * Validates one customer.
      * Logs the invalid data into application.log file.
+     *
+     * @param rawCustomer raw data of customer
+     * @param duplicateIds duplicate unique (webshop + customer) ids of Customers
+     * @param logger Logger for corrupt data handling
      *
      * @return empty optional or optional of Customer, depending on validation results.
      *
@@ -140,6 +150,10 @@ public class DataProcessor implements CommandLineRunner {
     /**
      * Validates each payment from row data.
      *
+     * @param logger Logger for corrupt data handling
+     * @param rawDataOfPayments raw data of payments to consume
+     * @param customers validated Customers
+     *
      * @return list of Payments.
      *
      * @author Bálint Mészáros
@@ -159,6 +173,10 @@ public class DataProcessor implements CommandLineRunner {
     /**
      * Validates one payment.
      * Logs the invalid data into application.log file.
+     *
+     * @param customers validated Customers
+     * @param rawPayment raw data of payment
+     * @param logger Logger for corrupt data handling
      *
      * @return empty optional or optional of Payment, depending on validation results.
      *
