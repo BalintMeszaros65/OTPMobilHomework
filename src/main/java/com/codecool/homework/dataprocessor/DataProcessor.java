@@ -278,4 +278,27 @@ public class DataProcessor implements CommandLineRunner {
                 dateOfPayment, customer);
         return Optional.of(payment);
     }
+
+    /**
+     * Creates a report for each Customer's sum of payment.
+     *
+     * @return set of String.
+     *
+     * @author Bálint Mészáros
+     */
+    private Set<String> createReportForSumPaymentOfCustomers(Set<Customer> customers, List<Payment> payments) {
+        Set<String> report = new HashSet<>();
+        for (Customer customer: customers) {
+            StringBuilder stringBuilder = new StringBuilder();
+            BigInteger sumOfPayment = payments.stream()
+                    .filter(payment -> payment.getCustomer().equals(customer))
+                    .map(Payment::getAmountPayed)
+                    .reduce(BigInteger.ZERO, BigInteger::add);
+            stringBuilder.append(customer.getName()).append(";")
+                    .append(customer.getAddress()).append(";")
+                    .append(sumOfPayment);
+            report.add(stringBuilder.toString());
+        }
+        return report;
+    }
 }
