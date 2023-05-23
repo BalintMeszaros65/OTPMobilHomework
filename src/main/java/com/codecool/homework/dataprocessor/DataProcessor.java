@@ -291,6 +291,9 @@ public class DataProcessor implements CommandLineRunner {
     /**
      * Creates a report for each Customer's sum of payment.
      *
+     * @param customers set of validated Customers
+     * @param payments list of validated Payments
+     *
      * @return set of String.
      *
      * @author Bálint Mészáros
@@ -311,6 +314,16 @@ public class DataProcessor implements CommandLineRunner {
         return report;
     }
 
+    /**
+     * Creates a report for top 2 Customers by sum of payment.
+     *
+     * @param reportOfCustomersBySumPayment set of String containing the report created
+     *                                      by createReportOfCustomersBySumPayment method
+     *
+     * @return list of String.
+     *
+     * @author Bálint Mészáros
+     */
     private List<String> createReportOfTop2CustomerByPaymentSum(Set<String> reportOfCustomersBySumPayment) {
         List<String> listOfReportForCustomerPaymentSum = new ArrayList<>(reportOfCustomersBySumPayment);
         Comparator<String> comparator = Comparator.comparing(string -> string.split(";"),
