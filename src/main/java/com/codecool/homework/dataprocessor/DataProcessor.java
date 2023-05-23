@@ -11,6 +11,7 @@ import java.math.BigInteger;
 import java.util.*;
 import java.util.logging.FileHandler;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 /**
  * Entry point for the project.
@@ -44,14 +45,18 @@ public class DataProcessor implements CommandLineRunner {
         Set<Customer> customers = validateCustomers(logger, rawDataOfCustomers);
         // validating payments data
         List<Payment> payments = validatePayments(logger, rawDataOfPayments, customers);
-        // creating report for customer payment sum
-        Set<String> reportOfCustomersBySumPayment = createReportOfCustomersBySumPayment(customers, payments);
+        // creating report of customer payment sum
+        Set<String> customersBySumPayment = createReportOfCustomersBySumPayment(customers, payments);
         // writing report to report01.csv file
-        csvFileHandler.writeCsvData(reportOfCustomersBySumPayment, "report01.csv");
+        csvFileHandler.writeCsvData(customersBySumPayment, "report01.csv");
         // creating top2 report from customer payment sum report
-        List<String> top2CustomerByPaymentSum = createReportOfTop2CustomerByPaymentSum(reportOfCustomersBySumPayment);
+        List<String> top2CustomerByPaymentSum = createReportOfTop2CustomerByPaymentSum(customersBySumPayment);
         // writing report to top.csv file
         csvFileHandler.writeCsvData(top2CustomerByPaymentSum, "top.csv");
+        // creating report of webshops by different payment sums
+        Set<String> webshopsByPaymentSums = createReportOfWebshopsByPaymentSums(payments);
+        // writing report to report02.csv file
+        csvFileHandler.writeCsvData(webshopsByPaymentSums , "report02.csv");
     }
 
     // **************************************************
@@ -333,5 +338,39 @@ public class DataProcessor implements CommandLineRunner {
             return listOfReportForCustomerPaymentSum.subList(0, 2);
         }
         return listOfReportForCustomerPaymentSum;
+    }
+
+    /**
+     * Creates a report for each webshop's sum of payment by card and transfer.
+     *
+     * @param payments list of validated Payments
+     *
+     * @return set of String.
+     *
+     * @author Bálint Mészáros
+     */
+    private Set<String> createReportOfWebshopsByPaymentSums(List<Payment> payments) {
+        Set<String> webshopIds = payments.stream()
+                .map(Payment::getWebshopId)
+                .collect(Collectors.toSet());
+        Set<String> report = new HashSet<>();
+        for (String webshopId: webshopIds) {
+            BigInteger cardPaymentsSum = payments.stream()
+                    .filter(payment -> payment.getWebshopId().equals(webshopId))
+                    .filter(payment -> payment.getType().equals("card"))
+                    .map(Payment::getAmountPayed)
+                    .reduce(BigInteger.ZERO, BigInteger::add);
+            BigInteger transferPaymentsSum = payments.stream()
+                    .filter(payment -> payment.getWebshopId().equals(webshopId))
+                    .filter(payment -> payment.getType().equals("transfer"))
+                    .map(Payment::getAmountPayed)
+                    .reduce(BigInteger.ZERO, BigInteger::add);
+            StringBuilder stringBuilder = new StringBuilder();
+            stringBuilder.append(webshopId).append(";")
+                    .append(cardPaymentsSum).append(";")
+                    .append(transferPaymentsSum).append(";");
+            report.add(stringBuilder.toString());
+        }
+        return report;
     }
 }
