@@ -45,7 +45,7 @@ public class DataProcessor implements CommandLineRunner {
         // validating payments data
         List<Payment> payments = validatePayments(logger, rawDataOfPayments, customers);
         // creating report for customer payment sum
-        Set<String> reportForCustomerPaymentSum = createReportForSumPaymentOfCustomers(customers, payments);
+        Set<String> reportOfCustomersBySumPayment = createReportOfCustomersBySumPayment(customers, payments);
         // writing report to report01.csv file
         csvFileHandler.writeCsvData(reportForCustomerPaymentSum, "report01.csv");
     }
@@ -291,7 +291,7 @@ public class DataProcessor implements CommandLineRunner {
      *
      * @author Bálint Mészáros
      */
-    private Set<String> createReportForSumPaymentOfCustomers(Set<Customer> customers, List<Payment> payments) {
+    private Set<String> createReportOfCustomersBySumPayment(Set<Customer> customers, List<Payment> payments) {
         Set<String> report = new HashSet<>();
         for (Customer customer: customers) {
             StringBuilder stringBuilder = new StringBuilder();
