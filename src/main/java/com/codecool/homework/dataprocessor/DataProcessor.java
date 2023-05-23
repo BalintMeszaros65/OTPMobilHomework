@@ -198,7 +198,7 @@ public class DataProcessor implements CommandLineRunner {
         String type = rawPayment.get(2);
         BigInteger amountPayed = null;
         try {
-            amountPayed = BigInteger.valueOf(Integer.parseInt(rawPayment.get(3)));
+            amountPayed = new BigInteger(rawPayment.get(3));
         } catch (NumberFormatException ignore) {}
         String bankAccountNumber = rawPayment.get(4);
         String creditOrDebitCardNumber = rawPayment.get(5);
