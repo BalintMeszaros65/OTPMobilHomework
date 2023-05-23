@@ -47,7 +47,11 @@ public class DataProcessor implements CommandLineRunner {
         // creating report for customer payment sum
         Set<String> reportOfCustomersBySumPayment = createReportOfCustomersBySumPayment(customers, payments);
         // writing report to report01.csv file
-        csvFileHandler.writeCsvData(reportForCustomerPaymentSum, "report01.csv");
+        csvFileHandler.writeCsvData(reportOfCustomersBySumPayment, "report01.csv");
+        // creating top2 report from customer payment sum report
+        List<String> top2CustomerByPaymentSum = createReportOfTop2CustomerByPaymentSum(reportOfCustomersBySumPayment);
+        // writing report to top.csv file
+        csvFileHandler.writeCsvData(top2CustomerByPaymentSum, "top.csv");
     }
 
     // **************************************************
@@ -305,5 +309,16 @@ public class DataProcessor implements CommandLineRunner {
             report.add(stringBuilder.toString());
         }
         return report;
+    }
+
+    private List<String> createReportOfTop2CustomerByPaymentSum(Set<String> reportOfCustomersBySumPayment) {
+        List<String> listOfReportForCustomerPaymentSum = new ArrayList<>(reportOfCustomersBySumPayment);
+        Comparator<String> comparator = Comparator.comparing(string -> string.split(";"),
+                Comparator.comparing((String[] array) -> new BigInteger(array[2])).reversed());
+        listOfReportForCustomerPaymentSum.sort(comparator);
+        if (listOfReportForCustomerPaymentSum.size() > 2) {
+            return listOfReportForCustomerPaymentSum.subList(0, 2);
+        }
+        return listOfReportForCustomerPaymentSum;
     }
 }
