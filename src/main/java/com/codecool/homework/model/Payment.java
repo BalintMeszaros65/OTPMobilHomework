@@ -21,19 +21,19 @@ public class Payment {
     // so need for a floating-point number (decimal)
     private BigInteger amountPayed;
     private String bankAccountNumber;
-    private String creditCardNumber;
+    private String creditOrDebitCardNumber;
     private String dateOfPayment;
     private Customer customer;
 
     public Payment(String webshopId, String customerId, String type, BigInteger amountPayed,
-                   String bankAccountNumber, String creditCardNumber, String dateOfPayment, Customer customer) {
+                   String bankAccountNumber, String creditOrDebitCardNumber, String dateOfPayment, Customer customer) {
         this.webshopId = webshopId;
         this.customerId = customerId;
         this.uniqueCustomerId = webshopId + customerId;
         this.type = type;
         this.amountPayed = amountPayed;
         this.bankAccountNumber = bankAccountNumber;
-        this.creditCardNumber = creditCardNumber;
+        this.creditOrDebitCardNumber = creditOrDebitCardNumber;
         this.dateOfPayment = dateOfPayment;
         this.customer = customer;
     }
@@ -45,13 +45,13 @@ public class Payment {
         return Objects.equals(getUniqueCustomerId(), payment.getUniqueCustomerId()) && Objects.equals(getType(), payment.getType())
                 && Objects.equals(getAmountPayed(), payment.getAmountPayed())
                 && Objects.equals(getBankAccountNumber(), payment.getBankAccountNumber())
-                && Objects.equals(getCreditCardNumber(), payment.getCreditCardNumber())
+                && Objects.equals(getCreditOrDebitCardNumber(), payment.getCreditOrDebitCardNumber())
                 && Objects.equals(getDateOfPayment(), payment.getDateOfPayment());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUniqueCustomerId(), getType(), getAmountPayed(), getBankAccountNumber(), getCreditCardNumber(),
+        return Objects.hash(getUniqueCustomerId(), getType(), getAmountPayed(), getBankAccountNumber(), getCreditOrDebitCardNumber(),
                 getDateOfPayment());
     }
 }
