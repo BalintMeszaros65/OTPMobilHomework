@@ -9,14 +9,13 @@ import java.util.List;
 import java.util.Scanner;
 
 @Component
-public class CsvFileReader {
-    // **************************************************
-    // Public methods
-    // **************************************************
+public class CsvFileHandler {
     /**
      * Reads the data from given file and throws FileNotFoundException if not found.
      *
      * @return data read from the file as a 2d matrix of Strings.
+     *
+     * @author Bálint Mészáros
      */
     public List<List<String>> readCsvData(File file) throws FileNotFoundException {
         Scanner scanner = new Scanner(file);
