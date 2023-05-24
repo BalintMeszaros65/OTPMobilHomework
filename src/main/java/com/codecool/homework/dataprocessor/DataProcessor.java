@@ -245,14 +245,6 @@ public class DataProcessor implements CommandLineRunner {
             logger.warning("Amount is 0 in payment: " + rawPaymentString);
             return emptyPayment;
         }
-        if (type.equals("card") && !bankAccountNumber.isEmpty()) {
-            logger.severe("Card payment with bank account number found in payment: " + rawPaymentString);
-            return emptyPayment;
-        }
-        if (type.equals("transfer") && !creditOrDebitCardNumber.isEmpty()) {
-            logger.severe("Transfer payment with credit/debit card number found in payment: " + rawPaymentString);
-            return emptyPayment;
-        }
         if (!bankAccountNumber.isEmpty() && !creditOrDebitCardNumber.isEmpty()) {
             logger.severe("Both bank account number and credit/debit card number found in payment: " + rawPaymentString);
             return emptyPayment;
@@ -261,7 +253,14 @@ public class DataProcessor implements CommandLineRunner {
             logger.severe("Neither bank account number nor credit/debit card number found in payment: " + rawPaymentString);
             return emptyPayment;
         }
-        // TODO might need better approach
+        if (type.equals("card") && !bankAccountNumber.isEmpty()) {
+            logger.severe("Card payment with bank account number found in payment: " + rawPaymentString);
+            return emptyPayment;
+        }
+        if (type.equals("transfer") && !creditOrDebitCardNumber.isEmpty()) {
+            logger.severe("Transfer payment with credit/debit card number found in payment: " + rawPaymentString);
+            return emptyPayment;
+        }
         if (type.equals("transfer") && bankAccountNumber.length() < 8 || bankAccountNumber.length() > 24) {
             logger.severe("Bank account number length not valid in payment: " + rawPaymentString);
             return emptyPayment;
@@ -281,7 +280,7 @@ public class DataProcessor implements CommandLineRunner {
             logger.severe("Date length is not valid in payment: " + rawPaymentString);
             return emptyPayment;
         }
-        // TODO checking if the date is a real date
+        // TODO check if the date is a real date (Date type?)
         if (customer == null) {
             logger.warning("Customer not found for payment: " + rawPaymentString);
             return emptyPayment;

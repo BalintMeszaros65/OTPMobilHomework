@@ -18,7 +18,7 @@ public class Payment {
     // card or transfer
     private String type;
     // BigInteger to keep the amount precisely and integer due to fillér as a currency is not in circulation,
-    // so need for a floating-point number (decimal)
+    // so no need for a floating-point number (decimal)
     private BigInteger amountPayed;
     private String bankAccountNumber;
     private String creditOrDebitCardNumber;
