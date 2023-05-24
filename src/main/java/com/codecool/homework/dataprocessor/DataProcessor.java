@@ -46,7 +46,7 @@ public class DataProcessor implements CommandLineRunner {
                     Please start the program with the following arguments:
                     First - path to customer.csv
                     Second - path to payments.csv
-                    Check documentation for further information.
+                    Check documentation or README for further information.
                     Program shutting down""");
             System.exit(0);
         }
