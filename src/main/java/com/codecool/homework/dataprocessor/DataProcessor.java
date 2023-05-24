@@ -3,6 +3,7 @@ package com.codecool.homework.dataprocessor;
 import com.codecool.homework.model.Customer;
 import com.codecool.homework.model.Payment;
 import com.codecool.homework.util.CsvFileHandler;
+import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -19,12 +20,9 @@ import java.util.stream.Collectors;
  * @author Bálint Mészáros
  */
 @SpringBootApplication
+@AllArgsConstructor
 public class DataProcessor implements CommandLineRunner {
-    CsvFileHandler csvFileHandler;
-
-    public DataProcessor(CsvFileHandler csvFileHandler) {
-        this.csvFileHandler = csvFileHandler;
-    }
+    private CsvFileHandler csvFileHandler;
 
     @Override
     public void run(String... args) throws Exception {
