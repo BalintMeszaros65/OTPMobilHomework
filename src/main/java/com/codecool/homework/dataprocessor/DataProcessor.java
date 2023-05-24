@@ -50,7 +50,7 @@ public class DataProcessor implements CommandLineRunner {
         // creating top2 report from customer payment sum report writing it to top.csv file
         List<String> top2CustomerByPaymentSum = createReportOfTop2CustomerByPaymentSum(customersBySumPayment);
         csvFileHandler.writeCsvData(top2CustomerByPaymentSum, "top.csv");
-        // creating report of webshops by different payment sums and writing it to to report02.csv file
+        // creating report of webshops by different payment sums and writing it to report02.csv file
         Set<String> webshopsByPaymentSums = createReportOfWebshopsByPaymentSums(payments);
         csvFileHandler.writeCsvData(webshopsByPaymentSums , "report02.csv");
     }
@@ -119,6 +119,7 @@ public class DataProcessor implements CommandLineRunner {
      */
     private Optional<Customer> validateCustomer(List<String> rawCustomer, Set<String> duplicateIds, Logger logger) {
         Optional<Customer> emptyCustomer = Optional.empty();
+        String rawCustomerString = String.join(";", rawCustomer);
 
         // data from raw Customer
         String webshopId = rawCustomer.get(0);
@@ -128,37 +129,37 @@ public class DataProcessor implements CommandLineRunner {
 
         // validation logic
         if (rawCustomer.size() != 4) {
-            logger.severe("Invalid number of data in customer: " + String.join(";", rawCustomer));
+            logger.severe("Invalid number of data in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         if (webshopId.length() != 4) {
-            logger.severe("Invalid webshop id in customer: " + String.join(";", rawCustomer));
+            logger.severe("Invalid webshop id in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         if (!webshopId.startsWith("WS") || !Character.isDigit(webshopId.charAt(2))
                 || !Character.isDigit(webshopId.charAt(3))) {
-            logger.severe("Invalid webshop id format in customer: " + String.join(";", rawCustomer));
+            logger.severe("Invalid webshop id format in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         if (id.length() != 3) {
-            logger.severe("Invalid id in customer: " + String.join(";", rawCustomer));
+            logger.severe("Invalid id in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         if (!id.startsWith("A") || !Character.isDigit(id.charAt(1)) || !Character.isDigit(id.charAt(2))) {
-            logger.severe("Invalid id format in customer: " + String.join(";", rawCustomer));
+            logger.severe("Invalid id format in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         if (duplicateIds.contains(id)) {
-            logger.severe("Duplicate id found in customer: " + String.join(";", rawCustomer));
+            logger.severe("Duplicate id found in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         // TODO add A## check
         if (name.isEmpty()) {
-            logger.severe("Name is empty in customer: " + String.join(";", rawCustomer));
+            logger.severe("Name is empty in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         if (address.isEmpty()) {
-            logger.severe("Address is empty in customer: " + String.join(";", rawCustomer));
+            logger.severe("Address is empty in customer: " + rawCustomerString);
             return emptyCustomer;
         }
 
@@ -370,6 +371,7 @@ public class DataProcessor implements CommandLineRunner {
                 .collect(Collectors.toSet());
         Set<String> report = new HashSet<>();
         for (String webshopId: webshopIds) {
+            StringBuilder stringBuilder = new StringBuilder();
             BigInteger cardPaymentsSum = payments.stream()
                     .filter(payment -> payment.getWebshopId().equals(webshopId))
                     .filter(payment -> payment.getType().equals("card"))
@@ -380,7 +382,6 @@ public class DataProcessor implements CommandLineRunner {
                     .filter(payment -> payment.getType().equals("transfer"))
                     .map(Payment::getAmountPayed)
                     .reduce(BigInteger.ZERO, BigInteger::add);
-            StringBuilder stringBuilder = new StringBuilder();
             stringBuilder.append(webshopId).append(";")
                     .append(cardPaymentsSum).append(";")
                     .append(transferPaymentsSum).append(";");
