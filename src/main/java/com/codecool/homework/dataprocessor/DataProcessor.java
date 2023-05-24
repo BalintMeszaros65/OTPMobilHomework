@@ -41,21 +41,17 @@ public class DataProcessor implements CommandLineRunner {
         // not catching FileNotFoundException because if the files are not found the program is redundant
         List<List<String>> rawDataOfCustomers = csvFileHandler.readCsvData(customerFile);
         List<List<String>> rawDataOfPayments = csvFileHandler.readCsvData(paymentsFile);
-        // validating customer data
+        // validating customer and payments data
         Set<Customer> customers = validateCustomers(logger, rawDataOfCustomers);
-        // validating payments data
         List<Payment> payments = validatePayments(logger, rawDataOfPayments, customers);
-        // creating report of customer payment sum
+        // creating report of customer payment sum and writing it to report01.csv file
         Set<String> customersBySumPayment = createReportOfCustomersBySumPayment(customers, payments);
-        // writing report to report01.csv file
         csvFileHandler.writeCsvData(customersBySumPayment, "report01.csv");
-        // creating top2 report from customer payment sum report
+        // creating top2 report from customer payment sum report writing it to top.csv file
         List<String> top2CustomerByPaymentSum = createReportOfTop2CustomerByPaymentSum(customersBySumPayment);
-        // writing report to top.csv file
         csvFileHandler.writeCsvData(top2CustomerByPaymentSum, "top.csv");
-        // creating report of webshops by different payment sums
+        // creating report of webshops by different payment sums and writing it to to report02.csv file
         Set<String> webshopsByPaymentSums = createReportOfWebshopsByPaymentSums(payments);
-        // writing report to report02.csv file
         csvFileHandler.writeCsvData(webshopsByPaymentSums , "report02.csv");
     }
 
@@ -124,11 +120,13 @@ public class DataProcessor implements CommandLineRunner {
     private Optional<Customer> validateCustomer(List<String> rawCustomer, Set<String> duplicateIds, Logger logger) {
         Optional<Customer> emptyCustomer = Optional.empty();
 
+        // data from raw Customer
         String webshopId = rawCustomer.get(0);
         String id = rawCustomer.get(1);
         String name = rawCustomer.get(2);
         String address = rawCustomer.get(3);
 
+        // validation logic
         if (rawCustomer.size() != 4) {
             logger.severe("Invalid number of data in customer: " + String.join(";", rawCustomer));
             return emptyCustomer;
