@@ -28,30 +28,42 @@ public class DataProcessor implements CommandLineRunner {
     public void run(String... args) throws Exception {
         // Logger setup
         FileHandler handler = new FileHandler("application.log", true);
+        // for file and console logging of invalid data read from input files
         Logger logger = Logger.getLogger("com.codecool.homework.dataprocessor");
-        // suppress console logs
-        logger.setUseParentHandlers(false);
+        // for console logging the steps of the application
+        Logger consoleLogger = Logger.getLogger("com.codecool.homework.console.logger");
         logger.addHandler(handler);
+
         // hardcoded customer and payments file
         // TODO refactor to use args as input
         File customerFile = new File("src/main/resources/input/customer.csv");
+        consoleLogger.info("File \"customer.csv\" successfully opened.");
         File paymentsFile = new File("src/main/resources/input/payments.csv");
+        consoleLogger.info("File \"payments.csv\" successfully opened.");
         // reading data from customer.csv and payments.csv and storing the 2d matrices
         // not catching FileNotFoundException because if the files are not found the program is redundant
         List<List<String>> rawDataOfCustomers = csvFileHandler.readCsvData(customerFile);
+        consoleLogger.info("Data from \"customer.csv\" successfully read.");
         List<List<String>> rawDataOfPayments = csvFileHandler.readCsvData(paymentsFile);
+        consoleLogger.info("Data from \"payments.csv\" successfully read.");
         // validating customer and payments data
         Set<Customer> customers = validateCustomers(logger, rawDataOfCustomers);
+        consoleLogger.info("Customers data successfully validated.");
         List<Payment> payments = validatePayments(logger, rawDataOfPayments, customers);
+        consoleLogger.info("Payments data successfully validated.");
         // creating report of customer payment sum and writing it to report01.csv file
         Set<String> customersBySumPayment = createReportOfCustomersBySumPayment(customers, payments);
         csvFileHandler.writeCsvData(customersBySumPayment, "report01.csv");
+        consoleLogger.info("Report \"report01.csv\" successfully created.");
         // creating top2 report from customer payment sum report writing it to top.csv file
         List<String> top2CustomerByPaymentSum = createReportOfTop2CustomerByPaymentSum(customersBySumPayment);
         csvFileHandler.writeCsvData(top2CustomerByPaymentSum, "top.csv");
+        consoleLogger.info("Report \"top.csv\" successfully created.");
         // creating report of webshops by different payment sums and writing it to report02.csv file
         Set<String> webshopsByPaymentSums = createReportOfWebshopsByPaymentSums(payments);
         csvFileHandler.writeCsvData(webshopsByPaymentSums , "report02.csv");
+        consoleLogger.info("Report \"report02.csv\" successfully created.");
+        consoleLogger.info("Program finished running.");
     }
 
     // **************************************************
