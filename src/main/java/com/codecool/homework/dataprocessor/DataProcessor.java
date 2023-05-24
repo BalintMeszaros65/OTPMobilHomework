@@ -153,7 +153,6 @@ public class DataProcessor implements CommandLineRunner {
             logger.severe("Duplicate id found in customer: " + rawCustomerString);
             return emptyCustomer;
         }
-        // TODO add A## check
         if (name.isEmpty()) {
             logger.severe("Name is empty in customer: " + rawCustomerString);
             return emptyCustomer;
