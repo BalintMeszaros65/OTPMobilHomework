@@ -36,12 +36,19 @@ public class DataProcessor implements CommandLineRunner {
         Logger consoleLogger = Logger.getLogger("com.codecool.homework.console.logger");
         logger.addHandler(handler);
 
-        // hardcoded customer and payments file
-        // TODO refactor to use args as input
-        File customerFile = new File("src/main/resources/input/customer.csv");
-        consoleLogger.info("File \"customer.csv\" successfully opened.");
-        File paymentsFile = new File("src/main/resources/input/payments.csv");
-        consoleLogger.info("File \"payments.csv\" successfully opened.");
+        // check for csv files in arguments
+        // command to run as intended:
+        // mvn spring-boot:run -Dspring-boot.run.arguments="src/main/resources/input/customer.csv src/main/resources/input/payments.csv"
+        if (args.length < 2) {
+            consoleLogger.severe("Missing customer and/or payments csv files, shutting down.");
+            System.exit(0);
+        }
+        String customerCsvFilePath = args[0];
+        String paymentsCsvFilePath = args[1];
+        File customerFile = new File(customerCsvFilePath);
+        consoleLogger.info(String.format("File %s successfully opened.", customerCsvFilePath));
+        File paymentsFile = new File(paymentsCsvFilePath);
+        consoleLogger.info(String.format("File %s successfully opened.", paymentsCsvFilePath));
         // reading data from customer.csv and payments.csv and storing the 2d matrices
         // not catching FileNotFoundException because if the files are not found the program is redundant
         List<List<String>> rawDataOfCustomers = csvFileHandler.readCsvData(customerFile);
@@ -53,6 +60,7 @@ public class DataProcessor implements CommandLineRunner {
         consoleLogger.info("Customers data successfully validated.");
         List<Payment> payments = validatePayments(logger, rawDataOfPayments, customers);
         consoleLogger.info("Payments data successfully validated.");
+        consoleLogger.info("Invalid data (if any) has been logged to application.log file.");
         // creating report of customer payment sum and writing it to report01.csv file
         Set<String> customersBySumPayment = createReportOfCustomersBySumPayment(customers, payments);
         csvFileHandler.writeCsvData(customersBySumPayment, "report01.csv");
