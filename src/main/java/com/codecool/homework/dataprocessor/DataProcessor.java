@@ -3,6 +3,7 @@ package com.codecool.homework.dataprocessor;
 import com.codecool.homework.model.Customer;
 import com.codecool.homework.model.Payment;
 import com.codecool.homework.util.CsvFileHandler;
+import com.codecool.homework.util.DateValidatorForNotIsoFormat;
 import lombok.AllArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -23,6 +24,7 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class DataProcessor implements CommandLineRunner {
     private CsvFileHandler csvFileHandler;
+    private DateValidatorForNotIsoFormat dateValidator;
 
     @Override
     public void run(String... args) throws Exception {
@@ -303,11 +305,10 @@ public class DataProcessor implements CommandLineRunner {
             return emptyPayment;
         }
         // TODO check if credit card number is valid (Luhn algorithm check, etc.)
-        if (dateOfPayment.length() != 10) {
-            logger.severe("Date length is not valid in payment: " + rawPaymentString);
+        if (!dateValidator.isValid(dateOfPayment)) {
+            logger.severe("Date is not valid in payment: " + rawPaymentString);
             return emptyPayment;
         }
-        // TODO check if the date is a real date (Date type?)
         if (customer == null) {
             logger.warning("Customer not found for payment: " + rawPaymentString);
             return emptyPayment;
