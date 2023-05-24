@@ -138,7 +138,7 @@ public class DataProcessor implements CommandLineRunner {
         }
         if (!webshopId.startsWith("WS") || !Character.isDigit(webshopId.charAt(2))
                 || !Character.isDigit(webshopId.charAt(3))) {
-            logger.severe("Invalid webshop id format in customer: " + rawCustomerString);
+            logger.severe("Not valid (WS##) webshop id format in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         if (id.length() != 3) {
@@ -146,7 +146,7 @@ public class DataProcessor implements CommandLineRunner {
             return emptyCustomer;
         }
         if (!id.startsWith("A") || !Character.isDigit(id.charAt(1)) || !Character.isDigit(id.charAt(2))) {
-            logger.severe("Invalid id format in customer: " + rawCustomerString);
+            logger.severe("Not valid (A##) id format in customer: " + rawCustomerString);
             return emptyCustomer;
         }
         if (duplicateIds.contains(id)) {
@@ -236,7 +236,7 @@ public class DataProcessor implements CommandLineRunner {
         }
         if (!webshopId.startsWith("WS") || !Character.isDigit(webshopId.charAt(2))
                 || !Character.isDigit(webshopId.charAt(3))) {
-            logger.severe("Invalid webshop id format in payment: " + rawPaymentString);
+            logger.severe("Not valid (WS##) webshop id format in payment: " + rawPaymentString);
             return emptyPayment;
         }
         if (customerId.length() != 3) {
@@ -245,7 +245,7 @@ public class DataProcessor implements CommandLineRunner {
         }
         if (!customerId.startsWith("A") || !Character.isDigit(customerId.charAt(1))
                 || !Character.isDigit(customerId.charAt(2))) {
-            logger.severe("Invalid customer id format in payment: " + rawPaymentString);
+            logger.severe("Not valid (A##) customer id format in payment: " + rawPaymentString);
             return emptyPayment;
         }
         if (!type.equals("card") && !type.equals("transfer")) {
