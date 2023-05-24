@@ -29,9 +29,10 @@ public class DataProcessor implements CommandLineRunner {
     @Override
     public void run(String... args) throws Exception {
         // Logger setup
-        // TODO suppress console log
         FileHandler handler = new FileHandler("application.log", true);
         Logger logger = Logger.getLogger("com.codecool.homework.dataprocessor");
+        // suppress console logs
+        logger.setUseParentHandlers(false);
         logger.addHandler(handler);
         // hardcoded customer and payments file
         // TODO refactor to use args as input
