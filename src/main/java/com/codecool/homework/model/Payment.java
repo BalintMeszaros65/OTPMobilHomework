@@ -1,13 +1,14 @@
 package com.codecool.homework.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigInteger;
-import java.util.Objects;
 
 @Getter
 @Setter
+@EqualsAndHashCode
 public class Payment {
     // to keep the data from csv
     private final String webshopId;
@@ -36,22 +37,5 @@ public class Payment {
         this.creditOrDebitCardNumber = creditOrDebitCardNumber;
         this.dateOfPayment = dateOfPayment;
         this.customer = customer;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Payment payment)) return false;
-        return Objects.equals(getUniqueCustomerId(), payment.getUniqueCustomerId()) && Objects.equals(getType(), payment.getType())
-                && Objects.equals(getAmountPayed(), payment.getAmountPayed())
-                && Objects.equals(getBankAccountNumber(), payment.getBankAccountNumber())
-                && Objects.equals(getCreditOrDebitCardNumber(), payment.getCreditOrDebitCardNumber())
-                && Objects.equals(getDateOfPayment(), payment.getDateOfPayment());
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(getUniqueCustomerId(), getType(), getAmountPayed(), getBankAccountNumber(), getCreditOrDebitCardNumber(),
-                getDateOfPayment());
     }
 }
