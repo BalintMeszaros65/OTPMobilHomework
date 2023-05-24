@@ -135,9 +135,17 @@ public class DataProcessor implements CommandLineRunner {
             logger.severe("Invalid webshop id in customer: " + String.join(";", rawCustomer));
             return emptyCustomer;
         }
-        // TODO add WS## check
+        if (!webshopId.startsWith("WS") || !Character.isDigit(webshopId.charAt(2))
+                || !Character.isDigit(webshopId.charAt(3))) {
+            logger.severe("Invalid webshop id format in customer: " + String.join(";", rawCustomer));
+            return emptyCustomer;
+        }
         if (id.length() != 3) {
             logger.severe("Invalid id in customer: " + String.join(";", rawCustomer));
+            return emptyCustomer;
+        }
+        if (!id.startsWith("A") || !Character.isDigit(id.charAt(1)) || !Character.isDigit(id.charAt(2))) {
+            logger.severe("Invalid id format in customer: " + String.join(";", rawCustomer));
             return emptyCustomer;
         }
         if (duplicateIds.contains(id)) {
@@ -170,9 +178,9 @@ public class DataProcessor implements CommandLineRunner {
      *
      * @author Bálint Mészáros
      */
-    // List due to the fact that there can be duplicate entries,
-    // if the customer did the exact same payment multiple times at the same day
-    // (not storing time of payment, just date)
+    /* List due to the fact that there can be duplicate entries,
+    if the customer did the exact same payment multiple times at the same day
+    (not storing time of payment, just the date) */
     private List<Payment> validatePayments(Logger logger, List<List<String>> rawDataOfPayments, Set<Customer> customers) {
         List<Payment> payments = new ArrayList<>();
         for (List<String> row : rawDataOfPayments) {
@@ -226,8 +234,18 @@ public class DataProcessor implements CommandLineRunner {
             logger.severe("Invalid webshop id in payment: " + rawPaymentString);
             return emptyPayment;
         }
+        if (!webshopId.startsWith("WS") || !Character.isDigit(webshopId.charAt(2))
+                || !Character.isDigit(webshopId.charAt(3))) {
+            logger.severe("Invalid webshop id format in payment: " + rawPaymentString);
+            return emptyPayment;
+        }
         if (customerId.length() != 3) {
             logger.severe("Invalid customer id in payment: " + rawPaymentString);
+            return emptyPayment;
+        }
+        if (!customerId.startsWith("A") || !Character.isDigit(customerId.charAt(1))
+                || !Character.isDigit(customerId.charAt(2))) {
+            logger.severe("Invalid customer id format in payment: " + rawPaymentString);
             return emptyPayment;
         }
         if (!type.equals("card") && !type.equals("transfer")) {
